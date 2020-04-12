@@ -69,14 +69,17 @@
     },
     methods:{
       ...mapMutations({
-        setMuiscList:'SET_MUSIC_LIST'
-        }),
+         setMusicList:'SET_MUSIC_LIST',
+         setTopImg:'SETTOPIMG',
+    }),
+      // ...mapActions(['setMusicList']),
       selectList(item){
-        
         this.$router.push({
            path: `/recommend/${item.id}`,
         })
-        this.setMuiscList(item)
+        this.setMusicList(item)
+        this.setTopImg(item.picUrl)
+        // this.$store.dispatch('setMusicList',item)
       },
       getBanners(){
         getBanner().then(res=>{
