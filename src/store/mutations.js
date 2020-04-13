@@ -7,6 +7,10 @@ const mutations={
     [types.SETTOPIMG](state,picUrl){
         debugger
         state.topimg=picUrl
+    },
+    [types.SET_RECOMMOND_LIST_FLAg](state,flag){
+        debugger
+        state.recommendListFlag=flag
     }
 }
 export default mutations

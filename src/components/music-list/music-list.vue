@@ -12,7 +12,16 @@
            <p class="count"> <i class="icon iconfont icon-remen"></i>{{Math.floor(musicList.playCount/10000)}}万</p>
        </div>
     </div>
-   <songlist :songs='listDetail'></songlist>
+    <div class="listContent">
+      <div class="sequence-play" v-show="listDetail.length" >
+        <i class="iconfont icon-bofang1"></i>
+        <span class="text">播放全部</span>
+        <span class="count">(共{{listDetail.length}}首)</span>
+     </div>
+     <scroll :data='listDetail'>
+     <songlist :songs='listDetail'></songlist>
+     </scroll>
+    </div>
   </div>
 </transition>
 </template>
@@ -70,7 +79,6 @@ export default {
                  this.listDetail=res.data.result.tracks.map(ele=>{
                    return (createRecommendListSong(ele))  
                  })
-                 debugger
                 }
             })
         }
@@ -91,7 +99,7 @@ export default {
   opacity: 0;
 }
 .music-list
-    position: fixed
+    position: absolute
     top: 0
     z-index: 100
     width 100%
@@ -110,6 +118,11 @@ export default {
     height: 320px
     background-position: 30% 32%;
     position relative
+.sequence-play
+    background: #2c3e50;
+    height: 40px;
+    border-bottom: 1px solid #636060;
+    padding: 13px 0 0 15px;
 &.playCount
      position absolute
      bottom: 15px

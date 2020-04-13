@@ -1,5 +1,5 @@
 <template>
-  <div class='recommend' ref='recommend'>
+  <div class='recommend' ref='recommend' v-show='true'>
     <scroll ref="scroll" class="recommend-content" :data='recommendList'>
       <div>
        <div v-if='banner.length' class="slider-wrapper" ref='sliderWrapper'>
@@ -54,7 +54,7 @@
  import Slider from 'base/slider/slider'
   import {getBanner,getRecommendList,getRecommendSongs} from 'api/recommend'
   import {ERR_OK} from 'api/config'
-  import {mapMutations,mapActions} from 'vuex'
+  import {mapMutations,mapActions,mapGetters} from 'vuex'
   export default{
     data(){
      return {
@@ -67,10 +67,14 @@
       Scroll,
       Slider
     },
+    computed:{
+      ...mapGetters(['recommendListFlag']),
+    },
     methods:{
       ...mapMutations({
          setMusicList:'SET_MUSIC_LIST',
          setTopImg:'SETTOPIMG',
+         setRecommendListFlag:'SET_RECOMMOND_LIST_FLAg',
     }),
       // ...mapActions(['setMusicList']),
       selectList(item){
@@ -79,6 +83,7 @@
         })
         this.setMusicList(item)
         this.setTopImg(item.picUrl)
+        this.setRecommendListFlag(false)
         // this.$store.dispatch('setMusicList',item)
       },
       getBanners(){

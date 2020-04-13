@@ -43,7 +43,7 @@ this.songs
 .item
     padding: 6px;
     line-height: 22px;
-    border-bottom: 1px solid #b0b0b0;
+    border-bottom: 1px solid #636060;
     height: 45px;
 .songindex
     width 50px
