@@ -1,6 +1,6 @@
 <template>
-  <div class='recommend' ref='recommend' v-show='true'>
-    <scroll ref="scroll" class="recommend-content" :data='recommendList'>
+  <div class='recommend' ref='recommend' >
+    <scroll ref="scroll" class="recommend-content" :data='recommendList' v-show='recommendFlag'>
       <div>
        <div v-if='banner.length' class="slider-wrapper" ref='sliderWrapper'>
           <slider>
@@ -60,7 +60,8 @@
      return {
        banner:[],
        recommendList:[],
-       recommendSongs:[]
+       recommendSongs:[],
+       recommendFlag:true,
      }
     },
     components: {
@@ -73,7 +74,6 @@
     methods:{
       ...mapMutations({
          setMusicList:'SET_MUSIC_LIST',
-         setTopImg:'SETTOPIMG',
          setRecommendListFlag:'SET_RECOMMOND_LIST_FLAg',
     }),
       // ...mapActions(['setMusicList']),
@@ -82,9 +82,12 @@
            path: `/recommend/${item.id}`,
         })
         this.setMusicList(item)
-        this.setTopImg(item.picUrl)
         this.setRecommendListFlag(false)
-        // this.$store.dispatch('setMusicList',item)
+        this.showRecommend(false)
+      },
+      showRecommend(flag){
+        debugger
+        // this.recommendFlag=flag
       },
       getBanners(){
         getBanner().then(res=>{
@@ -116,7 +119,9 @@
 
     },
     mounted(){
-
+debugger
+      this.recommendListFlag
+      this.$refs.recommend.widget
     }
 
 

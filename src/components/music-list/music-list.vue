@@ -19,7 +19,7 @@
         <span class="count">(共{{listDetail.length}}首)</span>
      </div>
      <scroll :data='listDetail'>
-     <songlist :songs='listDetail'></songlist>
+     <songlist :songs='listDetail' @select='selectItem'></songlist>
      </scroll>
     </div>
   </div>
@@ -30,8 +30,8 @@ import Scroll from 'base/scroll/scroll'
 import {getRecommendListDetail} from 'api/recommend.js'
 import {ERR_OK} from 'api/config.js'
 import {createRecommendListSong} from 'common/js/song.js'
-import {mapGetters} from 'vuex'
-import songlist from 'components/song-list/song-list'
+import {mapGetters,mapMutations,mapActions} from 'vuex'
+import songlist from 'base/song-list/song-list'
 export default {
     components:{
         Scroll,
@@ -46,26 +46,39 @@ export default {
     computed:{
         ...mapGetters([
             'musicList',
-            'topimg',
+            'recommendListFlag',
         ]),
         bgStyle(){
-            debugger
-           this.topimg 
             return `background-image: url(${this.musicList.picUrl})`
         },
     },
     watch:{
         'musicList.picUrl':{
             handler(val){
-                
                 this.imageUrl=url
             }
 
         }
     },
     methods:{
+        ...mapMutations({
+          setRecommendListFlag:'SET_RECOMMOND_LIST_FLAg',
+        }),
+        ...mapActions([
+           'selectPlay',
+           
+
+        ]),
+        selectItem(item,index){
+            debugger
+            this.selectPlay({
+                list:this.listDetail,
+                index:index
+            })
+        },
         back () {
-            
+            debugger
+            this.$emit('showRecommend',true)
             // this.$router.back()
             this.$router.push('/recommend')
         },
@@ -85,7 +98,6 @@ export default {
     },
     created(){
         
-        this.musicList
         this._getRecommendListDetail(this.musicList.id)
     }
 }

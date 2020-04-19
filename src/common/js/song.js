@@ -8,7 +8,6 @@ export default class Song{
    }
 }
 export function createRecommendListSong(song){
-    debugger
     return new Song({
         id: song.id,
         singer: singerName(song.artists),
@@ -18,7 +17,6 @@ export function createRecommendListSong(song){
     })
 }
 function singerName (arr) {
-    debugger
     let name = []
     name = arr.map((item) => {
       return item.name

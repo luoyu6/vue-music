@@ -22,11 +22,15 @@ export default {
         songs:Array
     },
    created(){
-debugger
-this.songs
+      debugger
+      this.songs
     },
     methods:{
-        getDesc (song) {
+      selectItem(item,index){
+        debugger
+        this.$emit('select',item,index)
+      },
+      getDesc (song) {
       if (song.aliaName) {
         return `${song.singer} - ${song.aliaName}`
       } else {
@@ -45,6 +49,14 @@ this.songs
     line-height: 22px;
     border-bottom: 1px solid #636060;
     height: 45px;
+.song-list .content
+  width: calc(100% - 50px);
+&.name,.desc
+ overflow: hidden;
+ text-overflow:ellipsis;
+ white-space: nowrap;
+ &.desc
+  font-size $font-size-small
 .songindex
     width 50px
     text-align center
