@@ -7,11 +7,11 @@
                    <img :src="currentSong.image" width="100%" height="100%">
                </div>
                <div class="top">
-                   <div class="back">
-                       <i class="iconfont icon-xiangxia"></i>
+                   <div class="back"><i class="iconfont icon-xiangxia"></i></div>
+                   <div class="misicTitle">
                        <h1 class="title" v-html='currentSong.name'></h1>
+                       <h2 class="subtitle" v-html='currentSong.singer'></h2>
                    </div>
-                   <h2 class="subtitle" v-html='currentSong.singer'></h2>
                </div>
             <!-- background -->
             <!-- top -->
@@ -51,14 +51,15 @@ created(){
  .normal-enter,.normal-leave-to{
  opacity 0.1  
 }
-.normal-player
+.player .normal-player
  position: fixed;
  left: 0;
  right: 0;
  top: 0;
  bottom: 0;
  z-index: 150;
- background: $color-background;
+ background:  #f2f3f4;
+
 &.background
       position: absolute;
       left: -50%;
@@ -68,24 +69,33 @@ created(){
       z-index: -1;
       opacity: 0.6;
       filter: blur(30px);
-&.back
- padding 15px
- display: flex;
+&.misicTitle
+    padding: 10px 0 0 0;
+    line-height: 22px;
+    text-align: center;
+    width: calc(100% - 50px);
+    margin: 0 0 0 -25px;
  & i 
   font-size $font-size-large
   flex 1
- & h1 
-  flex 1
-  font-weight: 700;
-  margin-left -30px
+ & .title 
+  font-weight: 700
+  font-size: $font-size-large-s
 .top .subtitle
  text-align center
+ font-size $font-size-small
+.top
+ display flex
+ & .back
+    line-height: 50px
+    width: 50px;
+    text-align: center;
 &.filter
     position: absolute;
     width: 100%;
     height: 100%;
-    background: #000;
     opacity: .6;
+    background-color #000
 
 
 </style>
