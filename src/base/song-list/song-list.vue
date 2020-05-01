@@ -22,12 +22,9 @@ export default {
         songs:Array
     },
    created(){
-      debugger
-      this.songs
     },
     methods:{
       selectItem(item,index){
-        debugger
         this.$emit('select',item,index)
       },
       getDesc (song) {

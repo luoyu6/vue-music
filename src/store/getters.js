@@ -4,3 +4,4 @@ export const recommendListFlag = state=>state.recommendListFlag
 export const playlist = state => state.playlist
 export const fullScreen= state => state.fullScreen
 export const currentSong= state => state.playlist[state.currentIndex]||{}
+export const playing=state=>state.playing//播放状态

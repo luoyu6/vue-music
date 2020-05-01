@@ -53,12 +53,7 @@ export default {
         },
     },
     watch:{
-        'musicList.picUrl':{
-            handler(val){
-                this.imageUrl=url
-            }
-
-        }
+       
     },
     methods:{
         ...mapMutations({

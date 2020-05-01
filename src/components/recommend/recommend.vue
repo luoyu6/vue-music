@@ -83,11 +83,6 @@
         })
         this.setMusicList(item)
         this.setRecommendListFlag(false)
-        this.showRecommend(false)
-      },
-      showRecommend(flag){
-        debugger
-        // this.recommendFlag=flag
       },
       getBanners(){
         getBanner().then(res=>{
@@ -119,7 +114,7 @@
 
     },
     mounted(){
-debugger
+
       this.recommendListFlag
       this.$refs.recommend.widget
     }
