@@ -15,6 +15,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "better-scroll": "^1.15.2",
+    "good-storage": "^1.1.1",
     "jsonp": "^0.2.1",
     "vue": "^2.5.2",
     "vue-jsonp": "^0.1.8",

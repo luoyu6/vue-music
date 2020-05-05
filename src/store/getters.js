@@ -5,3 +5,6 @@ export const playlist = state => state.playlist
 export const fullScreen= state => state.fullScreen
 export const currentSong= state => state.playlist[state.currentIndex]||{}
 export const playing=state=>state.playing//播放状态
+export const currentIndex=state=>state.currentIndex
+export const playHistory=state=>state.playHistory
+export const mode=state=>state.mode

@@ -47,6 +47,7 @@ export default {
         ...mapGetters([
             'musicList',
             'recommendListFlag',
+            
         ]),
         bgStyle(){
             return `background-image: url(${this.musicList.picUrl})`
@@ -64,17 +65,15 @@ export default {
            
 
         ]),
+        //存储播放列表，当前播放索引
         selectItem(item,index){
-            debugger
             this.selectPlay({
                 list:this.listDetail,
                 index:index
             })
         },
         back () {
-            debugger
             this.$emit('showRecommend',true)
-            // this.$router.back()
             this.$router.push('/recommend')
         },
         _getRecommendListDetail(id){

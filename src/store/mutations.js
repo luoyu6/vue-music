@@ -4,10 +4,10 @@ const mutations={
         state.musicList = musicList
     },
     [types.SET_PLAYLIST](state,list){
+        debugger
         state.playlist=list
     },
     [types.SET_FULL_SCREEN](state,flag){
-        debugger
         state.fullScreen=flag
     },
     //改变播放状态
@@ -16,6 +16,9 @@ const mutations={
     },
     [types.SET_CURRENT_INDEX](state,index){
         state.currentIndex=index
+    },
+    [types.SET_PLAY_HISTORY](state,history){
+        state.playHistory=history
     },
 
 }

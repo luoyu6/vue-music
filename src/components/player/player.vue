@@ -1,7 +1,7 @@
 <template>
     <div class="player" v-show="playlist.length > 0">
        <transition name='normal'>
-           <div class="normal-player" v-show='fullScreen'>
+           <div class="normal-player" v-show='fullScreen' @touchstart.once="firstPlay">
                <div class="background">
                    <div class="filter"></div>
                    <img :src="currentSong.image" width="100%" height="100%">
@@ -25,16 +25,16 @@
                    <div class="progress-wrapper"></div>
                    <div class="operators">
                        <div class="left">
-                       <i class="iconfont icon-xunhuan"></i>
+                       <i class="iconfont " :class="modeIcon"></i>
                        </div>
                        <div class="left">
-                       <i class="iconfont icon-xiayishou1"></i>
+                       <i class="iconfont icon-xiayishou1" @click='prev'></i>
                        </div>
                        <div class="center">
-                       <i class="iconfont icon-bofang1" @click="togglePlaying"></i>
+                       <i class="iconfont " @click="togglePlaying" :class='playIcon'></i>
                        </div>
                        <div class="right">
-                       <i class="iconfont icon-xiayishou"></i>
+                       <i class="iconfont icon-xiayishou" @click='next'></i>
                        </div>
                        <div class="right">
                        <i class="iconfont icon-aixin"></i>
@@ -43,28 +43,29 @@
                </div>
          </div>
        </transition>
-        <audio id="music-audio" ref="audio" autoplay=true></audio>
+        <audio id="music-audio" ref="audio" autoplay @canplay="ready"></audio>
     </div>
 </template>
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {getSong} from 'api/song.js'
+import {playMode} from 'api/config'
 export default {
 data(){
     return {
-        url:''
+        url:'',
+        songReady:false,
     }
 },
 watch:{
     currentSong(newVal, oldVal){//当前播放歌曲
-        debugger
         this.$refs.audio.pause()
         this.$refs.audio.currentTime = 0
         this.getSongURL(newVal.id)
     },
     url(newUrl){
         debugger
-        this.$refs.audio=newUrl
+        this.$refs.audio.src=newUrl
         this.setPlayingState(true)
     }
 
@@ -75,7 +76,22 @@ computed:{
         'fullScreen',
         'currentSong',
         'playing',//是否播放
-        ])
+        'currentIndex',//当前播放索引
+        'mode',
+        ]),
+    playIcon(){
+        debugger
+        return this.playing?'icon-bofang':'icon-zanting'
+    },
+    modeIcon(){
+        if(this.mode===playMode.sequence){
+            return 'icon-xunhuan2'
+        }else if(this.mode===playMode.loop){
+            return 'icon-danquxunhuan'
+        }else{
+            return 'icon-suiji1'
+        }
+    },
 },
 created(){
 },
@@ -83,13 +99,47 @@ methods:{
     ...mapMutations({
         setFullScreen:'SET_FULL_SCREEN',
         setPlayingState:'SET_PLAYING_STATE',
+        setCurrentIndex:'SET_CURRENT_INDEX',
     }),
+    ...mapActions([
+        'savePlayHistory',
+    ]),
+    
+    firstPlay () {
+      this.$refs.audio.play()
+    },
     togglePlaying(){
+        const audio = this.$refs.audio
         debugger
-        // const audio = this.$refs.audio
-        const audio = document.getElementById('music-audio')
-        this.setPlayingState(! this.playing)
+        this.setPlayingState(! this.playing )
         this.playing ? audio.play() : audio.pause()
+    },
+    ready(currentSong){
+        this.songReady = true
+        this.savePlayHistory(this.currentSong)
+    },
+    prev(){
+        let index=this.currentIndex-1
+        if( index===-1){
+             index=this.playlist.length-1
+        }
+        this.setCurrentIndex(index)
+        if(!this.playing){
+            this.togglePlaying()
+        }
+        this.songReady = false
+    },
+    next(){
+        debugger
+        let index=this.currentIndex+1
+        if(index==this.playlist.length){
+            index=0
+        }
+        this.setCurrentIndex(index)
+        if(!this.playing){
+            this.togglePlaying()
+        }
+        
     },
     getSongURL(id){
         getSong(id).then(res=>{
