@@ -25,7 +25,7 @@
                    <div class="progress-wrapper"></div>
                    <div class="operators">
                        <div class="left">
-                       <i class="iconfont " :class="modeIcon"></i>
+                       <i class="iconfont " :class="modeIcon" @click="changeMode"></i>
                        </div>
                        <div class="left">
                        <i class="iconfont icon-xiayishou1" @click='prev'></i>
@@ -49,7 +49,8 @@
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {getSong} from 'api/song.js'
-import {playMode} from 'api/config'
+import {playMode} from 'api/config.js'
+import {shuffle} from 'common/js/util.js'
 export default {
 data(){
     return {
@@ -80,7 +81,6 @@ computed:{
         'mode',
         ]),
     playIcon(){
-        debugger
         return this.playing?'icon-bofang':'icon-zanting'
     },
     modeIcon(){
@@ -92,6 +92,7 @@ computed:{
             return 'icon-suiji1'
         }
     },
+
 },
 created(){
 },
@@ -100,11 +101,32 @@ methods:{
         setFullScreen:'SET_FULL_SCREEN',
         setPlayingState:'SET_PLAYING_STATE',
         setCurrentIndex:'SET_CURRENT_INDEX',
+        setPlayMode:'SET_PLAY_MODE',
+        setPlayList:'SET_PLAY_LIST'
     }),
     ...mapActions([
         'savePlayHistory',
     ]),
-    
+    changeMode(){
+        let mode=(this.mode+1)%3
+        this.setPlayMode(mode)
+        let songList=[]
+        if(mode==playMode.random){//随机模式
+          songList=shuffle(this.sequenceList)
+        }else{
+          songList=this.sequenceList
+        }
+        this.resetCurrenIndex()
+        this.setPlayList(songList)
+
+    },
+    resetCurrenIndex(){
+        let index=songList.findIndex((ele)=>{
+            ele.id===this.currentSong.id
+        })
+        this.setCurrentIndex(index)
+        
+    },
     firstPlay () {
       this.$refs.audio.play()
     },

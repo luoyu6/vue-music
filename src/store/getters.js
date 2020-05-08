@@ -8,3 +8,4 @@ export const playing=state=>state.playing//播放状态
 export const currentIndex=state=>state.currentIndex
 export const playHistory=state=>state.playHistory
 export const mode=state=>state.mode
+export const sequenceList=state=>state.sequenceList

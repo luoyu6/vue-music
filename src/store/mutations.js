@@ -3,8 +3,7 @@ const mutations={
     [types.SET_MUSIC_LIST] (state,musicList){
         state.musicList = musicList
     },
-    [types.SET_PLAYLIST](state,list){
-        debugger
+    [types.SET_PLAY_LIST](state,list){
         state.playlist=list
     },
     [types.SET_FULL_SCREEN](state,flag){
@@ -20,6 +19,10 @@ const mutations={
     [types.SET_PLAY_HISTORY](state,history){
         state.playHistory=history
     },
+    [types.SET_PLAY_MODE](state,mode){//播放模式
+        debugger
+        state.mode=mode
+    }
 
 }
 export default mutations
