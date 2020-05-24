@@ -1,6 +1,6 @@
 <template>
-  <div class='recommend' ref='recommend' >
-    <scroll ref="scroll" class="recommend-content" :data='recommendList' v-show='recommendFlag'>
+  <div class='recommend' ref='recommend' :class="{'zIndex':isSongListPage}">
+    <scroll class="recommend-content" ref="scroll" :data="recommendList">
       <div>
        <div v-if='banner.length' class="slider-wrapper" ref='sliderWrapper'>
           <slider>
@@ -69,12 +69,14 @@
       Slider
     },
     computed:{
-      ...mapGetters(['recommendListFlag']),
+      ...mapGetters([
+        'isSongListPage',
+      ]),
     },
     methods:{
       ...mapMutations({
          setMusicList:'SET_MUSIC_LIST',
-         setRecommendListFlag:'SET_RECOMMOND_LIST_FLAg',
+         setShowSonglistPage:'SET_SONG_LIST_PAGE',
     }),
       // ...mapActions(['setMusicList']),
       selectList(item){
@@ -82,7 +84,7 @@
            path: `/recommend/${item.id}`,
         })
         this.setMusicList(item)
-        this.setRecommendListFlag(false)
+        this.setShowSonglistPage(true)
       },
       getBanners(){
         getBanner().then(res=>{
@@ -114,9 +116,6 @@
 
     },
     mounted(){
-
-      this.recommendListFlag
-      this.$refs.recommend.widget
     }
 
 
@@ -125,6 +124,19 @@
 
 <style scoped lang="stylus">
   @import "~common/stylus/variable"
+  .recommend
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index:1
+    top: 84px;
+    background $theme-background
+  .zIndex
+     z-index:5
+     top: 0
+  .recommend-content
+    width 100%
+    height 100%
   .slider-wrapper
    position relative
    margin 10px 0 0 0

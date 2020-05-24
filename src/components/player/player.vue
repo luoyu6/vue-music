@@ -37,12 +37,26 @@
                        <i class="iconfont icon-xiayishou" @click='next'></i>
                        </div>
                        <div class="right">
-                       <i class="iconfont icon-aixin"></i>
+                       <i class="iconfont " @click='toggleFavorite' :class='favoriteIcon()'></i>
                        </div>
                    </div>
                </div>
          </div>
        </transition>
+       <transition name='mini'>
+            <div class='mini-player' v-show='!fullScreen' @click='toFullScreen'>
+                <div class='icon'><img :src='currentSong.image'/></div>
+                <div class='text'>
+                    <h1 class="title" v-html='currentSong.name'></h1>
+                    <h2 class="subtitle" v-html='currentSong.singer'></h2>
+                </div>
+                <div class='control'>
+                    <i class='iconfont' :class='playIcon' @click.stop="togglePlaying"></i>
+                </div>
+                <div class='control' @click.stop="showPlaylist"><i class='iconfont icon-caidan'></i></div>
+            </div>
+       </transition>
+        <playList ref="playListCom"></playList>
         <audio id="music-audio" ref="audio" autoplay @canplay="ready"></audio>
     </div>
 </template>
@@ -51,12 +65,19 @@ import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {getSong} from 'api/song.js'
 import {playMode} from 'api/config.js'
 import {shuffle} from 'common/js/util.js'
+import commonMixVue from '../../base/widget/commonMix.vue'
+import playList from 'components/play-list/play-list'
+import { nextTick } from 'q';
 export default {
+    mixins:[commonMixVue],
 data(){
     return {
         url:'',
         songReady:false,
     }
+},
+components:{
+    playList,
 },
 watch:{
     currentSong(newVal, oldVal){//当前播放歌曲
@@ -64,8 +85,7 @@ watch:{
         this.$refs.audio.currentTime = 0
         this.getSongURL(newVal.id)
     },
-    url(newUrl){
-        debugger
+    url(newUrl){      
         this.$refs.audio.src=newUrl
         this.setPlayingState(true)
     }
@@ -79,8 +99,10 @@ computed:{
         'playing',//是否播放
         'currentIndex',//当前播放索引
         'mode',
+        'favoriteList',
+        'sequenceList',
         ]),
-    playIcon(){
+     playIcon(){
         return this.playing?'icon-bofang':'icon-zanting'
     },
     modeIcon(){
@@ -92,6 +114,8 @@ computed:{
             return 'icon-suiji1'
         }
     },
+
+    
 
 },
 created(){
@@ -106,7 +130,38 @@ methods:{
     }),
     ...mapActions([
         'savePlayHistory',
+        'deleteFavoriteSongs',
+        'saveFavoriteSongs',
     ]),
+    toFullScreen(){
+        
+        this.setFullScreen(true)
+    },
+    showPlaylist () {
+        
+        this.$refs.playListCom.show()
+
+    },
+    favoriteIcon(){
+        if(this.isFavorite(this.currentSong)){
+            return 'icon-like'
+        }else{
+            return 'icon-dislike'
+        }
+    },
+    isFavorite(){
+        let index=this.favoriteList.findIndex((ele)=>{
+            return ele.id===this.currentSong.id
+        })
+        return index>-1
+    },
+    toggleFavorite(){
+        if(this.isFavorite(this.currentSong)){
+            this.deleteFavoriteSongs(this.currentSong)
+        }else{
+            this.saveFavoriteSongs(this.currentSong)
+        }
+    },
     changeMode(){
         let mode=(this.mode+1)%3
         this.setPlayMode(mode)
@@ -116,11 +171,12 @@ methods:{
         }else{
           songList=this.sequenceList
         }
-        this.resetCurrenIndex()
+        
+        this.resetCurrenIndex(songList)
         this.setPlayList(songList)
-
     },
-    resetCurrenIndex(){
+    resetCurrenIndex(songList){
+        
         let index=songList.findIndex((ele)=>{
             ele.id===this.currentSong.id
         })
@@ -132,7 +188,6 @@ methods:{
     },
     togglePlaying(){
         const audio = this.$refs.audio
-        debugger
         this.setPlayingState(! this.playing )
         this.playing ? audio.play() : audio.pause()
     },
@@ -152,7 +207,7 @@ methods:{
         this.songReady = false
     },
     next(){
-        debugger
+        
         let index=this.currentIndex+1
         if(index==this.playlist.length){
             index=0
@@ -179,11 +234,43 @@ methods:{
 <style scope lang="stylus">
 @import '~common/stylus/variable'
  .normal-enter-active,.normal-leave-active{
- transition all 0.45s
+   transition all 0.45s
 }
  .normal-enter,.normal-leave-to{
- opacity 0.1  
+  opacity 0.1  
 }
+.mini-enter-active,.mini-leave-active{
+    transition all 0.45
+}
+.mini-enter,.mini-leave-to{
+    opacity 0.1
+}
+.mini-player
+    position: fixed;
+    z-index: 180;
+    bottom: 0;
+    height: 60px;
+    background: hsla(210, 33%, 29%, .85);
+    width: 100%;
+    align-items: center;
+    display: flex;
+    
+.mini-player .icon
+    width: 40px;
+    padding: 0px 10px 0 20px;
+.mini-player .icon img
+        width: 100%;
+        border-radius: 100%;
+.mini-player .text
+    flex: 1;
+    line-height: 14px;
+.mini-player .text .title
+    font-size 14px
+.mini-player .text .subtitle 
+   font-size 11px
+.mini-player .control
+    width: 30px;
+    padding: 0 10px;
 .player .normal-player
  position: fixed;
  left: 0;
@@ -208,7 +295,7 @@ methods:{
     text-align: center;
     width: calc(100% - 50px);
     margin: 0 0 0 -25px;
- & i 
+.operators i 
   font-size $font-size-large
   flex 1
  & .title 
@@ -265,6 +352,8 @@ methods:{
      &i.right
       text-align left 
       font-size 30px
+.icon-like
+  color:#c76b6b
 
 
 

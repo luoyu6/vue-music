@@ -43,13 +43,14 @@ export default{
                 {name:'最近播放'}
             ],
             currentIndex:-1,
-            favoriteList:[
-                {name:'32423',singer:'534534444'}
-            ]
+            
         }
     },
     computed:{
-        ...mapGetters(['playHistory'])
+        ...mapGetters([
+            'playHistory',
+            'favoriteList',
+            ])
     },
     methods:{
         back(){
@@ -69,11 +70,12 @@ export default{
 
 <style scoped lang='stylus'>
 .user
-    position: fixed
+    position fixed
     background: #2c3e50
-    top: 0
-    width: 100%
+    top 0
+    width 100%
     height 100%
+    z-index 3
 .slide-enter-active,.slide-leave-active{
     transition all .2s
 }

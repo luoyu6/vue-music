@@ -16,8 +16,14 @@
 <style scoped lang="stylus">
   @import "~common/stylus/variable"
  .m-header
-   height 60px
-   display flex
+    height: 60px;
+    display: flex;
+    position: fixed;
+    top: 0;
+    z-index: 3;
+    background: #2c3e50;
+    width: 100%;
+    background: $theme-background
   &.headerbox
    width 50%
    margin 0 auto

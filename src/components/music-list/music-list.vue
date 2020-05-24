@@ -2,26 +2,27 @@
 <template>
  <transition name="slide" mode="out-in">
   <div class="music-list" ref='music-list'>
-    <div class='header' @click="back">
-        <i class='iconfont icon-fanhui'></i>
-        <span>{{title}}</span>
-    </div>
-    <div class="bg-image" :style="bgStyle" ref="bgImage">
-       <div class='playCount'>
-           <p>{{musicList.name}}</p>
-           <p class="count"> <i class="icon iconfont icon-remen"></i>{{Math.floor(musicList.playCount/10000)}}万</p>
-       </div>
-    </div>
-    <div class="listContent">
-      <div class="sequence-play" v-show="listDetail.length" >
-        <i class="iconfont icon-bofang1"></i>
-        <span class="text">播放全部</span>
-        <span class="count">(共{{listDetail.length}}首)</span>
-     </div>
-     <scroll :data='listDetail'>
-     <songlist :songs='listDetail' @select='selectItem'></songlist>
-     </scroll>
-    </div>
+        <div class='header' @click="back">
+            <i class='iconfont icon-fanhui'></i>
+            <span>{{title}}</span>
+        </div>
+        <scroll :data='listDetail' class="scroll" >
+            <div class="listContentWraper">
+                <div class="bg-image" :style="bgStyle" ref="bgImage">
+                <div class='playCount'>
+                        <p>{{musicList.name}}</p>
+                        <p class="count"> <i class="icon iconfont icon-remen"></i>{{Math.floor(musicList.playCount/10000)}}万</p>
+                    </div>
+                </div>
+            
+                <div class="sequence-play" v-show="listDetail.length" >
+                    <i class="iconfont icon-bofang1"></i>
+                    <span class="text">播放全部</span>
+                    <span class="count">(共{{listDetail.length}}首)</span>
+                </div>
+                <songlist :songs='listDetail' @select='selectItem'></songlist>
+            </div>
+        </scroll>
   </div>
 </transition>
 </template>
@@ -31,11 +32,11 @@ import {getRecommendListDetail} from 'api/recommend.js'
 import {ERR_OK} from 'api/config.js'
 import {createRecommendListSong} from 'common/js/song.js'
 import {mapGetters,mapMutations,mapActions} from 'vuex'
-import songlist from 'base/song-list/song-list'
+import Songlist from 'base/song-list/song-list'
 export default {
     components:{
         Scroll,
-        songlist
+        Songlist,
     },
     data(){
         return {
@@ -46,7 +47,6 @@ export default {
     computed:{
         ...mapGetters([
             'musicList',
-            'recommendListFlag',
             
         ]),
         bgStyle(){
@@ -58,7 +58,7 @@ export default {
     },
     methods:{
         ...mapMutations({
-          setRecommendListFlag:'SET_RECOMMOND_LIST_FLAg',
+          setShowSonglistPage:'SET_SONG_LIST_PAGE',
         }),
         ...mapActions([
            'selectPlay',
@@ -75,6 +75,8 @@ export default {
         back () {
             this.$emit('showRecommend',true)
             this.$router.push('/recommend')
+            this.setShowSonglistPage(false)//是否显示歌曲列表页面
+
         },
         _getRecommendListDetail(id){
             
@@ -97,6 +99,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+@import "~common/stylus/variable"
 .slide-enter-active, .slide-leave-active {
   transition: all 0.2s
 }
@@ -105,10 +108,14 @@ export default {
   opacity: 0;
 }
 .music-list
-    position: absolute
-    top: 0
-    z-index: 100
+    position absolute
+    top 0
+    z-index 100
     width 100%
+    height 100%
+.scroll
+    height 100%
+    background $theme-background
 &.header
     height: 60px;
     padding: 0 0 0 15px;

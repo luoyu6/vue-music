@@ -22,6 +22,13 @@
 
 <style scoped lang='stylus'>
   @import "~common/stylus/variable";
+  .tab
+    position: fixed;
+    top: 60px;
+    background: #2c3e50;
+    z-index: 2;
+    height: 25px;
+    width: 100%;
   .tabbox
     display:flex
     font-size $font-size-small
